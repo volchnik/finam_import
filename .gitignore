@@ -2,3 +2,4 @@ data/
 node_modules/
 *.txt
 icharts.js
+icharts.json
