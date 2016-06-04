@@ -1,5 +1,6 @@
 data/
 node_modules/
+stock_quotes/
 *.txt
 icharts.js
 icharts.json

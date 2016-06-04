@@ -7,7 +7,7 @@ import sys
 from package import package_quote 
 
 def get_stock_key(code_stock, date):
-  if code_stock == 'RI':
+  if code_stock == 'RI' or code_stock == 'Si' or code_stock == 'SP' or code_stock == 'GZ' or code_stock == 'LK':
     if 12 <= date.month or date.month <= 2 :
       stock_postfix = "H";
     elif 3 <= date.month <= 5:
@@ -17,7 +17,7 @@ def get_stock_key(code_stock, date):
     else:
       stock_postfix = "Z";
       
-    return code_stock + stock_postfix + str(date.year)[3:]
+    return code_stock + stock_postfix + ((str(date.year)[3:]) if (date.month <= 2) else str(int(str(date.year)[3:]) + 1)) 
   else:
     return code_stock
  
