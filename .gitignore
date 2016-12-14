@@ -5,3 +5,4 @@ stock_quotes/
 icharts.js
 icharts.json
 *.pyc
+.idea/

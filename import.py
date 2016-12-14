@@ -74,7 +74,10 @@ def download_stock(code_stock, date, json_charts_data):
   if os.path.getsize('./data/' + file_name) < 1000:
     os.remove('./data/' + file_name)
   else:
-    package_quote(file_name)
+    package_quote(file_name, None)
+    if code_stock == "RI":
+      package_quote(file_name, True)
+      package_quote(file_name, False)
   return
 
 
