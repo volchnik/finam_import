@@ -18,8 +18,7 @@ def get_stock_key_alt(code_stock, date):
     else:
       stock_postfix = "Z"
 
-    return code_stock + stock_postfix + \
-           ((str(date.year)[3:]) if (date.month <= 11) else str(int(str(date.year)[3:]) + 1))
+    return code_stock + stock_postfix + get_date_postfix(date)[1:]
   else:
     return code_stock
 

@@ -33,8 +33,8 @@ def package_quote(quote_path, use_max):
   quote_path_array = quote_path.split('/')[1:]
   if use_max is not None:
     quote_path_array_sub = quote_path_array[0].split('_')
-    quote_path_array_sub[0] += "_MAX_" if use_max else "_MIN_"
-    quote_path_array[0] = ''.join(quote_path_array_sub)
+    quote_path_array_sub[0] += "_MAX" if use_max else "_MIN"
+    quote_path_array[0] = '_'.join(quote_path_array_sub)
 
   quote_path = '/'.join(quote_path_array)
 
