@@ -7,34 +7,31 @@ import sys
 from package import package_quote
 
 
+def get_stock_postfix(date, postfix_type):
+  if (12 == date.month and date.day > 12) or (date.month < 3 or (date.month == 3 and date.day <= 12)):
+    stock_postfix = "H" if postfix_type == 'letter' else "3"
+  elif (3 == date.month and date.day > 12) or (date.month > 3 and date.month < 6) or \
+          (date.month == 6 and date.day <= 12):
+    stock_postfix = "M" if postfix_type == 'letter' else "6"
+  elif (6 == date.month and date.day > 12) or (date.month > 6 and date.month < 9) or \
+          (date.month == 9 and date.day <= 12):
+    stock_postfix = "U" if postfix_type == 'letter' else "9"
+  else:
+    stock_postfix = "Z" if postfix_type == 'letter' else "12"
+
+  return stock_postfix
+
+
 def get_stock_key_alt(code_stock, date):
   if code_stock == 'RI' or code_stock == 'Si' or code_stock == 'SP' or code_stock == 'GZ' or code_stock == 'LK':
-    if 12 <= date.month or date.month <= 2:
-      stock_postfix = "H"
-    elif 3 <= date.month <= 5:
-      stock_postfix = "M"
-    elif 6 <= date.month <= 8:
-      stock_postfix = "U"
-    else:
-      stock_postfix = "Z"
-
-    return code_stock + stock_postfix + get_date_postfix(date)[1:]
+    return code_stock + get_stock_postfix(date, 'letter') + get_date_postfix(date)[1:]
   else:
     return code_stock
 
 
 def get_stock_key(code_stock, date):
   if code_stock == 'RI' or code_stock == 'Si' or code_stock == 'SP' or code_stock == 'GZ' or code_stock == 'LK':
-    if 12 <= date.month or date.month <= 2:
-      stock_postfix = "3"
-    elif 3 <= date.month <= 5:
-      stock_postfix = "6"
-    elif 6 <= date.month <= 8:
-      stock_postfix = "9"
-    else:
-      stock_postfix = "12"
-
-    return code_stock + "-" + stock_postfix + "." + get_date_postfix(date)
+    return code_stock + "-" + get_stock_postfix(date, 'digit') + "." + get_date_postfix(date)
   else:
     return code_stock
 
@@ -47,7 +44,9 @@ def download_stock(code_stock, date, json_charts_data):
   code_stock_key = get_stock_key(code_stock, date)
   code_stock_key_alt = get_stock_key_alt(code_stock, date)
 
-  url = 'http://export.finam.ru/{5}_{0}{1}{3}_{0}{1}{3}.txt?market=17&em={6}&code={5}&df={4}&mf={2}&yf=20{0}&from={3}.{1}.20{0}&dt={4}&mt={2}&yt=20{0}&to={3}.{1}.20{0}&p=1&f={5}_{0}{1}{3}_{0}{1}{3}&e=.txt&cn={5}&dtf=1&tmf=1&MSOR=1&mstime=on&mstimever=1&sep=3&sep2=1&datf=6'.format(
+  url = 'http://export.finam.ru/{5}_{0}{1}{3}_{0}{1}{3}.txt?market=17&em={6}&code={5}&df={4}&mf={2}&yf=20{0}&' \
+        'from={3}.{1}.20{0}&dt={4}&mt={2}&yt=20{0}&to={3}.{1}.20{0}&p=1&f={5}_{0}{1}{3}_{0}{1}{3}&e=.txt&' \
+        'cn={5}&dtf=1&tmf=1&MSOR=1&mstime=on&mstimever=1&sep=3&sep2=1&datf=6'.format(
     str(date.year)[2:], str(date.month).rjust(2, '0'), date.month - 1, str(date.day).rjust(2, '0'), date.day,
     code_stock_key, json_charts_data[code_stock_key_alt])
 
@@ -61,7 +60,8 @@ def download_stock(code_stock, date, json_charts_data):
     "Host": "195.128.78.52",
     "Referer": "http://www.finam.ru/profile/",
     "Upgrade-Insecure-Requests": "1",
-    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.80 Safari/537.36"
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) "
+                  "Chrome/46.0.2490.80 Safari/537.36"
   })
   data = urllib2.urlopen(request).read()
   if not os.path.exists("./data/" + code_stock):
